@@ -10,16 +10,16 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
-    let teamMembers = ["Dustin Lay"]
-    let components = ["Login System", "Dashboard", "API Layer"]
-    let previews = ["Home Screen UI"]
+    let teamMembers = ["Dustin Lay", "a", "b"]
+    let components = ["Workout Helper", "Calorie Tracker", "Weight Tracker"]
+    let previews = ["Home Screen", "Weight Tracker", "Calorie Tracker"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.contentInset.top = 10
+        tableView.sectionHeaderTopPadding = 12
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -28,15 +28,21 @@ class ViewController: UIViewController {
         switch segue.identifier {
         case "showMember":
             let selectedMember = teamMembers[indexPath.row]
-            print(selectedMember)
+            if let destinationVC = segue.destination as? MemberViewController {
+                destinationVC.memberName = selectedMember
+            }
 
         case "showProject":
-            let selectedComponent = components[indexPath.row]
-            print(selectedComponent)
+                let selectedComponent = components[indexPath.row]
+                if let destinationVC = segue.destination as? ProjectViewController {
+                    destinationVC.name = selectedComponent
+                }
 
         case "showPreview":
             let selectedPreview = previews[indexPath.row]
-            print(selectedPreview)
+            if let destinationVC = segue.destination as? PreviewViewController {
+                destinationVC.previewName = selectedPreview
+            }
 
         default:
             break
@@ -84,6 +90,19 @@ extension ViewController: UITableViewDataSource {
         case 2: return "Preview UIs"
         default: return nil
         }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch section {
+        case 0: return "Member Information"
+        case 1: return "Project Details"
+        case 2: return "Previews of the UIs"
+        default: return nil
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 30
     }
 }
 
